@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Beamish Society</title>
+  <meta name="description" content="The Beamish Society">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /*
+      Contrast ratios (WCAG AAA requires 7:1 for normal text, 4.5:1 for large text)
+      Background: #0d0d14 — luminance 0.0042
+
+      h1 gold    #c9a84c — luminance 0.4101 — ratio  8.5:1  ✓ AAA
+      quote      #ccc5b5 — luminance 0.5622 — ratio 11.3:1  ✓ AAA
+      est        #b89a5a — luminance 0.3410 — ratio  7.2:1  ✓ AAA
+      attribution #a89d90 — luminance 0.3448 — ratio  7.3:1  ✓ AAA
+      copyright  #ccc5b5 — luminance 0.5622 — ratio 11.3:1  ✓ AAA
+      plaque border #c9a84c — ratio 8.5:1 ✓ (non-text, floor is 3:1)
+    */
+
+    html, body {
+      height: 100%;
+      background-color: #0d0d14;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 3rem 2rem;
+    }
+
+    main {
+      text-align: center;
+      max-width: 580px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    /* Plaque frame — notched corners via clip-path */
+    .plaque-outer {
+      display: inline-block;
+      background: #c9a84c;
+      clip-path: polygon(
+        16px 0%, calc(100% - 16px) 0%,
+        100% 16px, 100% calc(100% - 16px),
+        calc(100% - 16px) 100%, 16px 100%,
+        0% calc(100% - 16px), 0% 16px
+      );
+      padding: 2px;
+    }
+
+    .plaque-inner {
+      background: #0d0d14;
+      padding: 1.8rem 3.8rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    h1 {
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      font-weight: 400;
+      color: #c9a84c;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+    }
+
+    /* Est. — full plaque gold, AAA compliant (#c9a84c, 8.5:1) */
+    .est {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.32em;
+      color: #c9a84c;
+      text-transform: uppercase;
+    }
+
+    blockquote {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+      line-height: 2.3;
+      color: #ccc5b5;
+      letter-spacing: 0.015em;
+    }
+
+    /* Attribution — warm neutral, AAA compliant (#a89d90, 7.3:1) */
+    .attribution {
+      display: block;
+      margin-top: 1.6rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      color: #a89d90;
+    }
+
+    /* Copyright — warm light, AAA compliant (#ccc5b5, 11.3:1) */
+    footer {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 0.875rem;
+      letter-spacing: 0.1em;
+      color: #ccc5b5;
+    }
+
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="plaque-outer" role="img" aria-label="The Beamish Society, established 2006">
+      <div class="plaque-inner" aria-hidden="true">
+        <h1>The Beamish Society</h1>
+        <div class="est">Est. 2006</div>
+      </div>
+    </div>
+    <div>
+      <blockquote lang="en">
+        <p>
+          'Twas brillig, and the slithy toves<br>
+          Did gyre and gimble in the wabe;<br>
+          All mimsy were the borogoves,<br>
+          And the mome raths outgrabe.
+        </p>
+      </blockquote>
+      <p class="attribution">— Lewis Carroll</p>
+    </div>
+  </main>
+  <footer>
+    <p>© 2026 The Beamish Society</p>
+  </footer>
+</body>
+</html>
