@@ -1,165 +1,481 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Beamish Society - Est. 2026</title>
-  <meta name="description" content="The Beamish Society">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Beamish Society</title>
+<meta name="description" content="The Beamish Society — a private holding company. Est. 2026.">
+<meta property="og:title" content="The Beamish Society">
+<meta property="og:description" content="A private holding company. We build instruments of trust.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ===== The Beamish Society — design tokens (inlined for standalone hosting) ===== */
+  :root {
+    --ink-900: #0d0d14;
+    --ink-850: #11111a;
+    --ink-800: #15151f;
+    --ink-700: #20202e;
+    --ink-600: #2b2b3a;
+    --gold-300: #e3cd86;
+    --gold-400: #d8bd6e;
+    --gold-500: #c9a84c;
+    --gold-600: #b89a5a;
+    --gold-700: #9c8038;
+    --gold-800: #6f5c28;
+    --parchment-50:  #efe9dc;
+    --parchment-100: #ccc5b5;
+    --parchment-200: #b9b1a1;
+    --parchment-300: #a89d90;
+    --parchment-400: #8c8275;
 
-    /*
-      Contrast ratios (WCAG AAA requires 7:1 for normal text, 4.5:1 for large text)
-      Background: #0d0d14 — luminance 0.0042
+    --font-display: 'Pinyon Script', 'Snell Roundhand', cursive;
+    --font-serif:   'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
-      h1 gold    #c9a84c — luminance 0.4101 — ratio  8.5:1  ✓ AAA
-      quote      #ccc5b5 — luminance 0.5622 — ratio 11.3:1  ✓ AAA
-      est        #b89a5a — luminance 0.3410 — ratio  7.2:1  ✓ AAA
-      attribution #a89d90 — luminance 0.3448 — ratio  7.3:1  ✓ AAA
-      copyright  #ccc5b5 — luminance 0.5622 — ratio 11.3:1  ✓ AAA
-      plaque border #c9a84c — ratio 8.5:1 ✓ (non-text, floor is 3:1)
-    */
+    --notch: 16px;
+    --measure: 600px;
 
-    html, body {
-      height: 100%;
-      background-color: #0d0d14;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 3rem 2rem;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    main {
-      text-align: center;
-      max-width: 580px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3rem;
-    }
+  html { scroll-behavior: smooth; }
 
-    /* Plaque frame — notched corners via clip-path */
-    .plaque-outer {
-      display: inline-block;
-      background: #c9a84c;
-      clip-path: polygon(
-        16px 0%, calc(100% - 16px) 0%,
-        100% 16px, 100% calc(100% - 16px),
-        calc(100% - 16px) 100%, 16px 100%,
-        0% calc(100% - 16px), 0% 16px
-      );
-      padding: 2px;
-    }
+  body {
+    background-color: var(--ink-900);
+    /* lamplight vignette — slightly warmer ink pooling at top-centre */
+    background-image: radial-gradient(ellipse 130% 90% at 50% -10%, #16161f 0%, #0d0d14 52%, #090910 100%);
+    background-attachment: fixed;
+    color: var(--parchment-100);
+    font-family: var(--font-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    .plaque-inner {
-      background: #0d0d14;
-      padding: 1.8rem 3.8rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-    }
+  /* Faint film grain overlay for atmosphere */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
-    h1 {
-      font-family: 'Pinyon Script', cursive;
-      font-size: clamp(2.8rem, 8vw, 5rem);
-      font-weight: 400;
-      color: #c9a84c;
-      line-height: 1.2;
-      letter-spacing: 0.02em;
-    }
+  /* ===== Header ===== */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.6rem clamp(1.5rem, 5vw, 3.5rem);
+    mix-blend-mode: normal;
+  }
+  .wordmark {
+    font-family: var(--font-serif);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+    text-decoration: none;
+  }
+  .header-est {
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--parchment-400);
+  }
 
-    /* Est. — full plaque gold, AAA compliant (#c9a84c, 8.5:1) */
-    .est {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 0.95rem;
-      font-weight: 400;
-      letter-spacing: 0.32em;
-      color: #c9a84c;
-      text-transform: uppercase;
-    }
+  /* ===== Layout ===== */
+  main { position: relative; z-index: 2; }
 
-    blockquote {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-style: italic;
-      font-weight: 300;
-      font-size: clamp(0.95rem, 2.4vw, 1.1rem);
-      line-height: 2.3;
-      color: #ccc5b5;
-      letter-spacing: 0.015em;
-    }
+  section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 clamp(1.5rem, 5vw, 3rem);
+  }
 
-    /* Attribution — warm neutral, AAA compliant (#a89d90, 7.3:1) */
-    .attribution {
-      display: block;
-      margin-top: 1.6rem;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 0.85rem;
-      letter-spacing: 0.14em;
-      color: #a89d90;
-    }
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    justify-content: center;
+    gap: 3rem;
+    padding-top: 6rem;
+    padding-bottom: 4rem;
+  }
 
-    /* Copyright — warm light, AAA compliant (#ccc5b5, 11.3:1) */
-    footer {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 0.875rem;
-      letter-spacing: 0.1em;
-      color: #ccc5b5;
-    }
+  .plaque-outer {
+    display: inline-block;
+    background: var(--gold-500);
+    padding: 2px;
+    clip-path: polygon(var(--notch) 0%, calc(100% - var(--notch)) 0%, 100% var(--notch), 100% calc(100% - var(--notch)), calc(100% - var(--notch)) 100%, var(--notch) 100%, 0% calc(100% - var(--notch)), 0% var(--notch));
+    box-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.07);
+  }
+  .plaque-inner {
+    background: var(--ink-900);
+    background-image: radial-gradient(ellipse 100% 100% at 50% 30%, #14141e 0%, #0d0d14 100%);
+    padding: clamp(1.6rem, 4vw, 2.4rem) clamp(2.4rem, 7vw, 4.6rem) clamp(1.3rem, 3.2vw, 2rem);
+    clip-path: polygon(var(--notch) 0%, calc(100% - var(--notch)) 0%, 100% var(--notch), 100% calc(100% - var(--notch)), calc(100% - var(--notch)) 100%, var(--notch) 100%, 0% calc(100% - var(--notch)), 0% var(--notch));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .plaque-name {
+    font-family: var(--font-display);
+    font-size: clamp(2.9rem, 8.5vw, 5.4rem);
+    font-weight: 400;
+    color: var(--gold-500);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .plaque-est {
+    font-family: var(--font-serif);
+    font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    color: var(--gold-500);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
 
-    /* Respect reduced motion preference */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-  </style>
+  .hero-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+    color: var(--parchment-200);
+    letter-spacing: 0.02em;
+    max-width: 30ch;
+    line-height: 1.6;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--parchment-400);
+  }
+  .scroll-cue span {
+    font-family: var(--font-serif);
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .scroll-cue .line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold-800), transparent);
+    animation: drift 2.8s var(--ease-out) infinite;
+  }
+  @keyframes drift {
+    0%, 100% { opacity: 0.4; transform: scaleY(0.7); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ===== Ornamental divider ===== */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    width: 100%;
+    max-width: 360px;
+    color: var(--gold-500);
+    margin: 0 auto;
+  }
+  .rule::before, .rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--gold-800);
+  }
+  .rule .fleuron { font-size: 1.5rem; line-height: 1; opacity: 0.9; }
+
+  /* ===== Verse ===== */
+  .verse {
+    padding-top: clamp(6rem, 14vh, 10rem);
+    padding-bottom: clamp(6rem, 14vh, 10rem);
+    gap: 3rem;
+  }
+  .verse blockquote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(0.95rem, 3.6vw, 1.5rem);
+    line-height: 2.3;
+    color: var(--parchment-100);
+    letter-spacing: 0.015em;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+  .verse .attr {
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-size: 0.9rem;
+    letter-spacing: 0.16em;
+    color: var(--parchment-300);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ===== Statement / works ===== */
+  .works {
+    padding-top: clamp(5rem, 12vh, 8rem);
+    padding-bottom: clamp(6rem, 14vh, 9rem);
+    gap: 1.4rem;
+  }
+  .works .eyebrow {
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold-600);
+  }
+  .works h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    color: var(--parchment-50);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+  .works .lede {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+    color: var(--parchment-200);
+    line-height: 1.65;
+    max-width: 42ch;
+    margin-bottom: 1.6rem;
+  }
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    width: 100%;
+    max-width: 900px;
+    margin-top: 1rem;
+  }
+  .principle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--gold-800);
+  }
+  .principle h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 0.82rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+  }
+  .principle p {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    color: var(--parchment-200);
+    line-height: 1.55;
+    max-width: 22ch;
+  }
+
+  /* ===== Contact ===== */
+  .contact {
+    padding-top: clamp(5rem, 12vh, 8rem);
+    padding-bottom: clamp(4rem, 10vh, 6rem);
+    gap: 1.6rem;
+  }
+  .contact h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 7vw, 3.8rem);
+    color: var(--gold-500);
+    line-height: 1.2;
+  }
+  .contact p {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+    color: var(--parchment-200);
+    max-width: 34ch;
+    line-height: 1.6;
+  }
+  .contact-link {
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 2.6vw, 1.4rem);
+    letter-spacing: 0.04em;
+    color: var(--parchment-50);
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--gold-700);
+    transition: color 0.24s var(--ease-out), border-color 0.24s var(--ease-out);
+    margin-top: 0.4rem;
+  }
+  .contact-link:hover {
+    color: var(--gold-400);
+    border-color: var(--gold-400);
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2.4rem 1.5rem 2.8rem;
+    border-top: 1px solid var(--ink-600);
+  }
+  footer p {
+    font-family: var(--font-serif);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--parchment-300);
+  }
+
+  /* ===== Reveal animation ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal.d1 { transition-delay: 0.12s; }
+  .reveal.d2 { transition-delay: 0.26s; }
+  .reveal.d3 { transition-delay: 0.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .scroll-cue .line { animation: none; }
+  }
+
+  @media (max-width: 640px) {
+    .principles { grid-template-columns: 1fr; gap: 0; }
+    .principle { border-top: 1px solid var(--gold-800); padding-top: 1.6rem; padding-bottom: 0.4rem; }
+    .principle:first-child { border-top: 1px solid var(--gold-800); }
+    .scroll-cue { display: none; }
+  }
+</style>
 </head>
 <body>
-  <main>
-    <div class="plaque-outer" role="img" aria-label="The Beamish Society, established 2006">
-      <div class="plaque-inner" aria-hidden="true">
-        <h1>The Beamish Society</h1>
-        <div class="est">Est. 2026</div>
+  <header>
+    <a href="#top" class="wordmark">The Beamish Society</a>
+    <span class="header-est">Est. MMXXVI</span>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="plaque-outer reveal d1" role="img" aria-label="The Beamish Society, established 2026">
+        <div class="plaque-inner" aria-hidden="true">
+          <span class="plaque-name">The Beamish Society</span>
+          <span class="plaque-est">Est. 2026</span>
+        </div>
       </div>
-    </div>
-    <div>
-      <blockquote lang="en">
-        <p>
-          'Twas brillig, and the slithy toves<br>
-          Did gyre and gimble in the wabe;<br>
-          All mimsy were the borogoves,<br>
-          And the mome raths outgrabe.
-        </p>
+      <p class="hero-tagline reveal d2">A private holding company, in the quiet business of trust.</p>
+      <div class="scroll-cue reveal d3" aria-hidden="true">
+        <span>Within</span>
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <!-- Verse -->
+    <section class="verse">
+      <div class="rule reveal" aria-hidden="true"><span class="fleuron">&#10087;</span></div>
+      <blockquote class="reveal d1">
+        'Twas brillig, and the slithy toves<br>
+        Did gyre and gimble in the wabe;<br>
+        All mimsy were the borogoves,<br>
+        And the mome raths outgrabe.
       </blockquote>
-      <p class="attribution">— Lewis Carroll</p>
-    </div>
+      <span class="attr reveal d2">— Lewis Carroll</span>
+    </section>
+
+    <!-- Works -->
+    <section class="works">
+      <span class="eyebrow reveal">The Society</span>
+      <h2 class="reveal d1">We build instruments of trust.</h2>
+      <p class="lede reveal d2">Quiet by design, for institutions that cannot afford to be wrong. We found, hold, and tend a small number of ventures — and say little of them in public.</p>
+      <div class="principles">
+        <div class="principle reveal d1">
+          <h3>Discretion</h3>
+          <p>What we tend, we tend in confidence.</p>
+        </div>
+        <div class="principle reveal d2">
+          <h3>Permanence</h3>
+          <p>Built to outlast the weather.</p>
+        </div>
+        <div class="principle reveal d3">
+          <h3>Precision</h3>
+          <p>Measured twice. Then measured again.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact">
+      <div class="rule reveal" aria-hidden="true"><span class="fleuron">&#10086;</span></div>
+      <h2 class="reveal d1">Enquiries</h2>
+      <p class="reveal d2">The Society keeps a small door. Introductions are welcome; admission is by curiosity alone.</p>
+      <a class="contact-link reveal d3" href="mailto:info@thebeamishsociety.com">info@thebeamishsociety.com</a>
+    </section>
   </main>
+
   <footer>
-    <p>© 2026 The Beamish Society</p>
+    <p>© 2026 The Beamish Society — All hours reserved.</p>
   </footer>
+
+  <script>
+    // Stately scroll reveals — no bounce, respects reduced-motion.
+    (function () {
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var items = document.querySelectorAll('.reveal');
+      if (reduced || !('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('visible'); });
+        return;
+      }
+      // Hero reveals immediately on load
+      var hero = document.querySelectorAll('.hero .reveal');
+      requestAnimationFrame(function () {
+        setTimeout(function () { hero.forEach(function (el) { el.classList.add('visible'); }); }, 120);
+      });
+      // The rest reveal on scroll into view
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+      items.forEach(function (el) {
+        if (!el.closest('.hero')) io.observe(el);
+      });
+    })();
+  </script>
 </body>
 </html>
